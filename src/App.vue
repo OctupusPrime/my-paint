@@ -2,7 +2,7 @@
   <div id="app">
     <header>
       <div class="container flex">
-        <h1 class="header-title">.My-paint</h1>
+        <h1 class="header-title">.MyPaint</h1>
         <div class="nav-section">
             <a class="nav-item">
               <span class="fas fa-palette" />
