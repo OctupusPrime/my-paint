@@ -44,17 +44,24 @@
               <span class="far fa-trash-alt" />
               Reset
             </a>
+            <a class="nav-item" @click="replayCanvas">
+              <span class="fas fa-video" />
+              Replay
+            </a>
         </div>
       </div>
     </header>
     <main>
       <Canvas :lineWidth="currentWeigth" :lineColor="currentColor" :isEraser="isEraser" ref="paint"/>
     </main>
+    <section class="small-devices">
+      <h2>Sorry its only for large devices 😢</h2>
+    </section>
   </div>
 </template>
 
 <script>
-import Canvas from '@/components/Canvas.vue'
+import Canvas from '@/components/Canvas.vue';
 
 export default {
   name: 'App',
@@ -76,7 +83,10 @@ export default {
       this.currentWeigth = weigth;
     },
     resetCanvas() {
-      this.$refs.paint.clearCanvas();
+      this.$refs.paint.clear();
+    },
+    replayCanvas() {
+      this.$refs.paint.replay();
     }
   },
   created() {
@@ -224,5 +234,35 @@ export default {
   }
   .selected-weigth .item-weight-example {
     background: #fff;
+  }
+
+  .small-devices {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .2s ease;
+    text-align: center;
+  }
+
+  @media (max-width: 1000px) {
+    .small-devices {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  @media (max-height: 500px) {
+    .small-devices {
+      opacity: 1;
+      visibility: visible;
+    }
   }
 </style>

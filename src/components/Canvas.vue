@@ -1,15 +1,23 @@
 <template>
-    <canvas class="canvas-paint" 
-            id="paint" 
+    <canvas id="paint" 
             :width="canvasWidht + 'px'" 
             :height="canvasHeight + 'px'"
+            :class="{'eraser': isEraser}"
             @mousedown="start($event)"
             @mousemove="drag($event)"
-            @mouseup="end" />
+            @mouseup="end" 
+
+            @touchstart="start($event.touches[0])"
+            @touchmove="drag($event.touches[0])"
+            @touchend="end"/>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 let isClick = false;
+
+let isLoaded = false;
 
 let firstPos = {
     x: 0,
@@ -19,6 +27,8 @@ let secondPos = {
     x: 0,
     y: 0
 };
+
+let paintArr;
 
 export default {
     name: "Canvas",
@@ -30,36 +40,39 @@ export default {
     data: () => ({
         canvasWidht: 0,
         canvasHeight: 0,
-        ctx: 0
+        ctx: 0,
     }),
     methods: {
+        ...mapActions(['setNewLine', 'clearPaint']),
         start(e) {
-            isClick = true;
-            firstPos.x = e.pageX;
-            firstPos.y = e.pageY;
-            this.paint(firstPos, firstPos);
-        },
-        drag(e) {
-            if (isClick) {
+            if (isLoaded) {
+                isClick = true;
+                firstPos.x = e.pageX;
+                firstPos.y = e.pageY;
+
                 secondPos.x = e.pageX;
                 secondPos.y = e.pageY;
 
-                this.paint(firstPos, secondPos);
-
+                this.saveToStore();
+            }
+        },
+        drag(e) {
+            if (isClick) {
                 firstPos.x = e.pageX;
                 firstPos.y = e.pageY;
+
+                this.saveToStore();
+
+                secondPos.x = e.pageX;
+                secondPos.y = e.pageY;
             }
         },
         end() {
             isClick = false;
         },
-        paint(firstPos, secondPos) {
-            if (this.isEraser)
-                this.ctx.strokeStyle = '#fff';
-            else
-                this.ctx.strokeStyle = this.lineColor;
-
-            this.ctx.lineWidth = this.lineWidth;
+        paint(firstPos, secondPos, lineWidth, lineColor) {
+            this.ctx.strokeStyle = lineColor;
+            this.ctx.lineWidth = lineWidth;
             this.ctx.lineCap = 'round';
 
             this.ctx.beginPath();
@@ -67,8 +80,54 @@ export default {
             this.ctx.lineTo(secondPos.x, secondPos.y);
             this.ctx.stroke();  
         },
-        clearCanvas() {
+        clear() {
             this.ctx.clearRect(0, 0, this.canvasWidht, this.canvasHeight);
+            this.clearPaint();
+            paintArr = [];
+        },
+        replay() {
+            isLoaded = false;
+            this.ctx.clearRect(0, 0, this.canvasWidht, this.canvasHeight);
+            this.build();
+        },
+        saveToStore() {
+            if (this.isEraser) {
+                this.paint(firstPos, secondPos, this.lineWidth, "#fff");
+
+                this.setNewLine({
+                    firstPos: Object.assign({}, firstPos), 
+                    secondPos: Object.assign({}, secondPos), 
+                    lineWidth: this.lineWidth, 
+                    lineColor: '#fff'
+                });
+            }
+            else {
+                this.paint(firstPos, secondPos, this.lineWidth, this.lineColor);
+
+                this.setNewLine({
+                    firstPos: Object.assign({}, firstPos), 
+                    secondPos: Object.assign({}, secondPos), 
+                    lineWidth: this.lineWidth, 
+                    lineColor: this.lineColor
+                });
+            }         
+        },
+        build() {
+            paintArr = this.$store.getters.getPaintArr;
+
+            if (paintArr.length === 0)
+                isLoaded = true;
+
+            setTimeout(function(){
+                for(let i = 0; i < paintArr.length; i++){
+                    const {firstPos, secondPos, lineWidth, lineColor} = paintArr[i];
+                    setTimeout(function(){
+                        this.paint(firstPos, secondPos, lineWidth, lineColor);
+                    }.bind(this),i * 7)
+                    if (i === paintArr.length - 1)
+                        isLoaded = true;
+                }    
+            }.bind(this), 400);  
         }
     }, 
     created() {
@@ -80,6 +139,8 @@ export default {
     mounted() {
         let c = document.getElementById("paint");
         this.ctx = c.getContext("2d");
+
+        this.build();
     }
 }
 </script>
@@ -87,5 +148,9 @@ export default {
 <style scoped>
     #paint {
         background: #fff;
+        cursor: url("../assets/img/brush.png") 0 15, auto;
+    }
+    .eraser {
+        cursor: url("../assets/img/eraser.png") 0 15, auto !important; 
     }
 </style>
