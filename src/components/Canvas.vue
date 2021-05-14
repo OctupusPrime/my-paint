@@ -124,9 +124,10 @@ export default {
                     setTimeout(function(){
                         this.paint(firstPos, secondPos, lineWidth, lineColor);
                     }.bind(this),i * 7)
-                    if (i === paintArr.length - 1)
-                        isLoaded = true;
                 }    
+                setTimeout(function(){
+                    isLoaded = true;
+                },(paintArr.length - 1) * 7 + 400)
             }.bind(this), 400);  
         }
     }, 
