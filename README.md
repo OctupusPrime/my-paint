@@ -1,24 +1,52 @@
-# my-paint
+# .Mypaint
 
-## Project setup
-```
+## Installation Setup
+```bash
+# clone code
+git clone https://github.com/OctupusPrime/my-paint.git
+
+# go to folder
+cd my-paint
+
+# install dependencies
 npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+# serve with hot reload at localhost:3000
+npm serve
+```  
 
-### Compiles and minifies for production
-```
-npm run build
-```
+If you dont want install [**Live demo**](https://octupusprime.github.io/my-paint/)  
+## Description  
+  
+Simple drawing app with play and save features in vuex.
+### Key features : 
+* **Saving notes to vuex**;
+* **Convenient gui** _for draw_;
+* **Change color for brush**;
+* **Have an eraser**;
+* **Have dark theme**;
 
-### Lints and fixes files
-```
-npm run lint
-```
+## Documentation
+### Plugins
+| Name | Usage |
+| --- | --- |
+| [vuex](https://www.npmjs.com/package/vuex) | Used to store canvas and replay it |
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Folders
+* #### assets
+    It stores the **global styles** in the css folder, and the *gifs / images* folders hold the original gifs and photos (so you might think).
+* #### components
+    Store only one Canvas component in which all the logic happens.
+* #### store
+    Using for saving canvas to localstorage and replay it.
+* #### App
+    The application itself, where I put everything together.
+* #### main
+    Contains off all global components.
+
+### Authors
+[**Misha Sokil**](https://github.com/OctupusPrime)
+### License
+ MIT © Misha Sokil
+
+**Thank you for your attention**
