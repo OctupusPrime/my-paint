@@ -1,4 +1,8 @@
 # .Mypaint
+<p align="center">
+  <img alt="Todos application image" src="https://raw.githubusercontent.com/OctupusPrime/portfolio/master/src/assets/img/work3.png">
+</p>  
+
 
 ## Installation Setup
 ```bash
@@ -11,7 +15,7 @@ cd my-paint
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:3000
+# serve with hot reload at localhost:8080/my-paint
 npm serve
 ```  
 
